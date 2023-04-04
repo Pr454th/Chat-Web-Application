@@ -39,7 +39,11 @@ const joinChat = (object) => async (req, res) => {
     await chat.save();
     const chats = await Chat.findOne({ name: req.params.chatId });
     object.emit("data", chats);
-    return res.status(201).json(chats);
+    const chatRes = {
+      name: chats.name,
+      user: chats.user[chats.user.length - 1],
+    };
+    return res.status(201).json(chatRes);
   } catch (error) {
     res.status(409).json({ message: error.message });
   }

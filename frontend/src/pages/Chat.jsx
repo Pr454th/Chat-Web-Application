@@ -22,7 +22,7 @@ export default function Chat() {
 
   const handleSend = (e) => {
     e.preventDefault();
-    const user = data.user[data.user.length - 1];
+    const user = data.user;
     dispatch(
       updateChat({ name: id, message: { user: user, message: newMessage } })
     );
