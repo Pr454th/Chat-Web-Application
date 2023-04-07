@@ -9,25 +9,36 @@ require("dotenv").config();
 
 app.use(bodyParser.json());
 app.use(cors());
+const server = http.createServer(app);
+const io = socketIO(server, { cors: { origin: "*" } });
+const Chat = require("./models/ChatModel");
+
+Chat.watch().on("change", (change) => {
+  console.log("change", change.fullDocument);
+  io.emit("data", change.fullDocument);
+});
+
+const chatRoutes = require("./routes/chatRoutes");
+app.use("/api/chat", chatRoutes(io));
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static("frontend/dist"));
+  app.get("*", (req, res) => {
+    res.sendFile(
+      path.resolve(__dirname, "frontend", "dist", "dist/index.html")
+    );
+  });
+} else {
+  app.get("/", (req, res) => {
+    res.send("API is running...");
+  });
+}
 mongoose
   .connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
   })
   .then(() => {
-    const server = http.createServer(app);
-    const io = socketIO(server, { cors: { origin: "*" } });
-    const Chat = require("./models/ChatModel");
-
-    Chat.watch().on("change", (change) => {
-      console.log("change", change.fullDocument);
-      io.emit("data", change.fullDocument);
-    });
-
-    const chatRoutes = require("./routes/chatRoutes");
-    app.use("/api/chat", chatRoutes(io));
-
     server.listen(process.env.PORT, () => {
-      console.log("Server started on port 3001");
+      console.log(`Server started on port ${process.env.PORT}`);
     });
     console.log("Connected to MongoDB");
   })
