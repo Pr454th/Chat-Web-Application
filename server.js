@@ -20,6 +20,7 @@ Chat.watch().on("change", (change) => {
 });
 
 const chatRoutes = require("./routes/chatRoutes");
+
 app.use("/api/chat", chatRoutes(io));
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, ".", "frontend", "dist")));

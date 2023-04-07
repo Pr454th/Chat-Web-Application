@@ -43,6 +43,9 @@ const joinChat = (object) => async (req, res) => {
       name: chats.name,
       user: chats.user[chats.user.length - 1],
     };
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
     return res.status(201).json(chatRes);
   } catch (error) {
     res.status(409).json({ message: error.message });
@@ -83,6 +86,9 @@ const updateChat = (object) => async (req, res) => {
         $push: { message: req.body.message },
       }
     );
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
     const chats = await Chat.find({ name: req.params.chatId });
     object.emit("data", chats);
     return res.status(201).json(chat);
