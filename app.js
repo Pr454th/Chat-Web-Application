@@ -30,6 +30,7 @@ if (process.env.NODE_ENV === "production") {
     res.send("API is running...");
   });
 }
+
 mongoose
   .connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
