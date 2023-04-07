@@ -40,6 +40,7 @@ server.listen(process.env.PORT, () => {
 });
 
 module.exports = app;
+module.exports = server;
 
 // const express = require("express");
 // const http = require("http");
