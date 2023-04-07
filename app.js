@@ -45,7 +45,7 @@ mongoose
     console.log("Error connecting to MongoDB", err);
   });
 
-module.exports = app;
+module.exports = server;
 
 // const express = require("express");
 // const http = require("http");
