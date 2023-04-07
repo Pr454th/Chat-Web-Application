@@ -39,7 +39,7 @@ server.listen(process.env.PORT, () => {
   console.log(`Server started on port ${process.env.PORT}`);
 });
 
-module.exports = server;
+module.exports = app;
 
 // const express = require("express");
 // const http = require("http");
