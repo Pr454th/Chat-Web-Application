@@ -9,31 +9,45 @@ export default function Home() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [roomCode, setRoomCode] = useState("");
+  const [showPopup, setShowPopup] = useState(false);
+  const [createOrJoin, setCreateOrJoin] = useState(1);
   const { loading, error, chat } = useSelector((state) => state.chatCreate);
   const generateRandomString = () => {
     let randomString =
-      Math.random().toString(36).substring(2, 15) +
-      Math.random().toString(36).substring(2, 15);
+      Math.random().toString(36).substring(2, 4) +
+      Math.random().toString(36).substring(2, 4);
     return randomString;
   };
   const createRoomHandle = () => {
     dispatch(createRoom({ name: generateRandomString() })).then(() => {
       const state = store.getState();
-      console.log("Room state-->", state.chatCreate.chat);
+      // console.log("Room state-->", state.chatCreate.chat);
       localStorage.setItem("chat", JSON.stringify(state.chatCreate.chat));
-      navigate(`/chat/${state.chatCreate.chat.name}`);
+      setRoomCode(state.chatCreate.chat.name);
+      setShowPopup(true);
+      const timer = setTimeout(() => {
+        setShowPopup(false);
+        navigate(`/chat/${state.chatCreate.chat.name}`);
+      }, 5000);
+      return () => clearTimeout(timer);
     });
   };
 
   const joinRoomHandle = () => {
     if (roomCode === "") return;
-    console.log("roomCode-->", roomCode);
+    // console.log("roomCode-->", roomCode);
+    setCreateOrJoin(2);
     dispatch(joinRoom({ id: roomCode })).then((res) => {
-      console.log("res-->", res);
+      // console.log("res-->", res);
       const state = store.getState();
-      console.log("Join state-->", state);
+      // console.log("Join state-->", state);
       localStorage.setItem("chat", JSON.stringify(state.joinRoom.room));
-      navigate(`/chat/${roomCode}`);
+      setShowPopup(true);
+      const timer = setTimeout(() => {
+        setShowPopup(false);
+        navigate(`/chat/${roomCode}`);
+      }, 5000);
+      return () => clearTimeout(timer);
     });
   };
 
@@ -41,6 +55,19 @@ export default function Home() {
     <div className="min-h-screen bg-gray-900 text-white">
       <div className="flex flex-col items-center justify-center h-screen">
         <h1 className="text-4xl text-teal-400 font-bold mb-8">ChatVerse</h1>
+        {showPopup && (
+          <div className="border-2 border-solid border-rose-500 bg-white dark:bg-black fixed z-50 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg p-8">
+            <p className="text-xl font-semibold mb-4">
+              {createOrJoin === 1 ? "Chat Room Created" : "Chat Room Joined"}
+            </p>
+            <h1 className="text-gray-500 text-2xl text-center text-black dark:text-cyan-400">
+              {roomCode}
+            </h1>
+            <p className="text-center text-sm mt-4">
+              You will be redirected in 5 seconds
+            </p>
+          </div>
+        )}
         <div className="flex flex-col items-center">
           <label htmlFor="room_code" className="mb-4 text-lg">
             Join an existing room
@@ -70,35 +97,5 @@ export default function Home() {
         </button>
       </div>
     </div>
-
-    // <div className="grid grid-cols-12">
-    //   <div className="col-span-12">
-    //     <div className="flex flex-col items-center justify-center h-screen">
-    //       <h1 className="text-3xl font-bold mb-8">Welcome to the Chat App</h1>
-    //       <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-    //         <input
-    //           type="text"
-    //           id="room_code"
-    //           value={roomCode}
-    //           className="bg-white-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 outline-none"
-    //           placeholder="Room Code"
-    //           onChange={(e) => setRoomCode(e.target.value)}
-    //         />
-    //         <button
-    //           className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded"
-    //           onClick={joinRoomHandle}
-    //         >
-    //           Join Room
-    //         </button>
-    //         <button
-    //           className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
-    //           onClick={createRoomHandle}
-    //         >
-    //           Create Room
-    //         </button>
-    //       </div>
-    //     </div>
-    //   </div>
-    // </div>
   );
 }

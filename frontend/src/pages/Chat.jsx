@@ -6,7 +6,7 @@ import { getChatDetail, updateChat } from "../actions/chatActions";
 import io from "socket.io-client";
 import axios from "axios";
 
-const socket = io("http://localhost:3001/");
+const socket = io("/");
 
 const userColors = [
   "bg-red-500",
@@ -37,31 +37,38 @@ export default function Chat() {
       setnewMessage("");
     });
   };
+  const handleLeave = () => {
+    localStorage.removeItem("chat");
+    window.location.href = "/";
+  };
   useEffect(() => {
     socket.on("data", (newData) => {
-      console.log("newData-->", newData);
+      // console.log("newData-->", newData);
       if (newData != null) setMessages(newData[0]);
     });
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
   useEffect(() => {
-    axios.get(`http://localhost:3001/api/chat/${id}`).then((res) => {
-      console.log(res.data.message);
+    axios.get(`/api/chat/${id}`).then((res) => {
+      // console.log(res.data.message);
       setMessages(res.data);
     });
   }, []);
 
   return (
-    <div className="grid grid-cols-12 bg-white dark:bg-black">
-      <div className="col-span-2 h-screen overflow-hidden">
-        <h2 className="text-black dark:text-white text-lg font-bold mb-4 fixed">
-          Chat Name
-        </h2>
-        <button className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded mt-4 fixed">
+    <div className="flex flex-col h-screen bg-white dark:bg-black">
+      <div className="flex items-center justify-between px-4 py-2">
+        <h1 className="text-2xl font-medium text-black dark:text-white">
+          {id}
+        </h1>
+        <button
+          className="px-8 bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded-full"
+          onClick={handleLeave}
+        >
           Leave
         </button>
       </div>
-      <div className="col-span-10 mx-6">
+      <div className="flex-1 overflow-y-auto px-4 py-2">
         <div style={{ marginBottom: "120px" }}>
           {messages &&
             messages.message &&
@@ -71,22 +78,23 @@ export default function Chat() {
               let chatColor = userColors[i];
               let c2 = `m-1.5 w-3/4 py-3 px-4 ${chatColor} rounded-br-3xl rounded-tr-3xl rounded-tl-xl text-white`;
               if (JSON.stringify(message.user) === JSON.stringify(data.user)) {
-                console.log(message.user, data.user);
+                // console.log(message.user, data.user);
                 c1 = "flex flex-end justify-end";
                 c2 = `m-1.5 w-3/4 py-3 px-4 ${chatColor} rounded-bl-3xl rounded-tr-xl rounded-tl-3xl text-white`;
               }
               return (
                 <div className={`${c1}`} key={index}>
                   <div className={`${c2}`}>
-                    {message.message}-{message.user}
+                    {message.message}
+                    {/* -{message.user} */}
                   </div>
                 </div>
               );
             })}
           <div ref={messagesEndRef} />
         </div>
-        <div className="fixed bottom-0 w-4/5 ">
-          <form className="bg-white flex p-2 rounded-full drop-shadow-2xl mb-10 dark:bg-black">
+        <div className="fixed bottom-0 w-full">
+          <form className=" mr-8 bg-white flex p-2 rounded-full drop-shadow-2xl mb-10 dark:bg-black">
             <input
               className="bg-white dark:bg-black text-black dark:text-white w-full rounded-full px-4 border border-white-300 outline-none focus:border-blue-500"
               type="text"

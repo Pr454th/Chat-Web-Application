@@ -9,12 +9,6 @@ export default function App() {
     <Router>
       <Routes>
         <Route path="/chat/:id" element={<Chat />} />
-        {/* <div className="grid grid-cols-12">
-            <div className="col-span-2"></div>
-            <div className="col-span-10 overflow-y-auto">
-              <Chat />
-            </div>
-          </div> */}
         <Route path="/test" element={<Test />} />
         <Route path="/" element={<Home />} />
       </Routes>

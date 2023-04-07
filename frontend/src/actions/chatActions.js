@@ -85,10 +85,7 @@ export const updateChat = (chat) => async (dispatch) => {
     console.log("updateChat action");
     dispatch({ type: CHAT_UPDATE_REQUEST });
     console.log(chat);
-    const { data } = await axios.put(
-      `http://localhost:3001/api/chat/${chat.name}`,
-      chat
-    );
+    const { data } = await axios.put(`/api/chat/${chat.name}`, chat);
     console.log("updateChat action data: ", data);
     dispatch({
       type: CHAT_UPDATE_SUCCESS,
@@ -110,10 +107,7 @@ export const createRoom = (room) => async (dispatch) => {
     console.log("createRoom action");
     dispatch({ type: CHAT_CREATE_REQUEST });
     console.log(room);
-    const { data } = await axios.post(
-      `http://localhost:3001/api/chat/create`,
-      room
-    );
+    const { data } = await axios.post(`/api/chat/create`, room);
     console.log("createRoom action data: ", data);
     dispatch({
       type: CHAT_CREATE_SUCCESS,
@@ -135,10 +129,7 @@ export const joinRoom = (room) => async (dispatch) => {
     console.log("joinRoom action");
     dispatch({ type: CHAT_JOIN_REQUEST });
     console.log(room);
-    const { data } = await axios.post(
-      `http://localhost:3001/api/chat/join/${room.id}`,
-      room
-    );
+    const { data } = await axios.post(`/api/chat/join/${room.id}`, room);
     console.log("joinRoom action data: ", data);
     dispatch({
       type: CHAT_JOIN_SUCCESS,
