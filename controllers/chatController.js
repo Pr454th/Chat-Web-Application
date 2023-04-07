@@ -38,7 +38,7 @@ const joinChat = (object) => async (req, res) => {
   try {
     await chat.save();
     const chats = await Chat.findOne({ name: req.params.chatId });
-    object.emit("data", chats);
+    object.emit("chats", chats);
     const chatRes = {
       name: chats.name,
       user: chats.user[chats.user.length - 1],

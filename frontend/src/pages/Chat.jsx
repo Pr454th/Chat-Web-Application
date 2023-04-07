@@ -8,6 +8,18 @@ import axios from "axios";
 
 const socket = io("http://localhost:3001/");
 
+const userColors = [
+  "bg-red-500",
+  "bg-blue-500",
+  "bg-green-500",
+  "bg-yellow-500",
+  "bg-pink-500",
+  "bg-purple-500",
+  "bg-emerald-400",
+  "bg-violet-500",
+  "bg-cyan-400",
+];
+
 export default function Chat() {
   const dispatch = useDispatch();
   const { id } = useParams();
@@ -15,19 +27,21 @@ export default function Chat() {
   const [messages, setMessages] = useState([]);
   const messagesEndRef = useRef(null);
   const data = JSON.parse(localStorage.getItem("chat"));
-  socket.on("data", (newData) => {
-    console.log("newData-->", newData);
-    if (newData != null) setMessages(newData[0]);
-  });
 
   const handleSend = (e) => {
     e.preventDefault();
     const user = data.user;
     dispatch(
       updateChat({ name: id, message: { user: user, message: newMessage } })
-    );
+    ).then(() => {
+      setnewMessage("");
+    });
   };
   useEffect(() => {
+    socket.on("data", (newData) => {
+      console.log("newData-->", newData);
+      if (newData != null) setMessages(newData[0]);
+    });
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
   useEffect(() => {
@@ -38,46 +52,57 @@ export default function Chat() {
   }, []);
 
   return (
-    <>
-      <div style={{ marginBottom: "120px" }}>
-        {messages &&
-          messages.message &&
-          messages.message.map((message, index) => {
-            let c1 = "flex flex-end justify-start ";
-            let c2 =
-              "m-1.5 w-3/4 py-3 px-4 bg-gray-400 rounded-br-3xl rounded-tr-3xl rounded-tl-xl text-white";
-            if (index % 2 === 0) {
-              c1 = "flex flex-end justify-end";
-              c2 =
-                "m-1.5 w-3/4 py-3 px-4 bg-blue-400 rounded-bl-3xl rounded-tl-3xl rounded-tr-xl text-white";
-            }
-            return (
-              <div className={`${c1}`} key={index}>
-                <div className={`${c2}`}>
-                  {message.message}-{message.user}
+    <div className="grid grid-cols-12 bg-white dark:bg-black">
+      <div className="col-span-2 h-screen overflow-hidden">
+        <h2 className="text-black dark:text-white text-lg font-bold mb-4 fixed">
+          Chat Name
+        </h2>
+        <button className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded mt-4 fixed">
+          Leave
+        </button>
+      </div>
+      <div className="col-span-10 mx-6">
+        <div style={{ marginBottom: "120px" }}>
+          {messages &&
+            messages.message &&
+            messages.message.map((message, index) => {
+              let c1 = "flex flex-end justify-start";
+              let i = message.user % userColors.length;
+              let chatColor = userColors[i];
+              let c2 = `m-1.5 w-3/4 py-3 px-4 ${chatColor} rounded-br-3xl rounded-tr-3xl rounded-tl-xl text-white`;
+              if (JSON.stringify(message.user) === JSON.stringify(data.user)) {
+                console.log(message.user, data.user);
+                c1 = "flex flex-end justify-end";
+                c2 = `m-1.5 w-3/4 py-3 px-4 ${chatColor} rounded-bl-3xl rounded-tr-xl rounded-tl-3xl text-white`;
+              }
+              return (
+                <div className={`${c1}`} key={index}>
+                  <div className={`${c2}`}>
+                    {message.message}-{message.user}
+                  </div>
                 </div>
-              </div>
-            );
-          })}
-        <div ref={messagesEndRef} />
+              );
+            })}
+          <div ref={messagesEndRef} />
+        </div>
+        <div className="fixed bottom-0 w-4/5 ">
+          <form className="bg-white flex p-2 rounded-full drop-shadow-2xl mb-10 dark:bg-black">
+            <input
+              className="bg-white dark:bg-black text-black dark:text-white w-full rounded-full px-4 border border-white-300 outline-none focus:border-blue-500"
+              type="text"
+              placeholder="Type your message here"
+              value={newMessage}
+              onChange={(e) => setnewMessage(e.target.value)}
+            />
+            <button
+              className="bg-blue-500 hover:bg-blue-700 rounded-full px-8 h-14 text-white ml-2"
+              onClick={handleSend}
+            >
+              Send
+            </button>
+          </form>
+        </div>
       </div>
-      <div className="fixed bottom-0 w-4/5">
-        <form className="bg-white flex p-2 rounded-full drop-shadow-2xl mb-10">
-          <input
-            className="w-full rounded-full px-4 border border-white-300 outline-none focus:border-blue-500"
-            type="text"
-            placeholder="Type your message here"
-            value={newMessage}
-            onChange={(e) => setnewMessage(e.target.value)}
-          />
-          <button
-            className="bg-blue-500 hover:bg-blue-700 rounded-full px-8 h-14 text-white ml-2"
-            onClick={handleSend}
-          >
-            Send
-          </button>
-        </form>
-      </div>
-    </>
+    </div>
   );
 }

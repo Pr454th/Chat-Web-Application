@@ -9,6 +9,9 @@ import {
   CHAT_CREATE_REQUEST,
   CHAT_CREATE_SUCCESS,
   CHAT_CREATE_FAIL,
+  CHAT_JOIN_REQUEST,
+  CHAT_JOIN_SUCCESS,
+  CHAT_JOIN_FAIL,
 } from "../constants/chatConstants";
 
 export const getChatDetail = (id) => async (dispatch) => {
@@ -119,6 +122,31 @@ export const createRoom = (room) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: CHAT_CREATE_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const joinRoom = (room) => async (dispatch) => {
+  try {
+    console.log("joinRoom action");
+    dispatch({ type: CHAT_JOIN_REQUEST });
+    console.log(room);
+    const { data } = await axios.post(
+      `http://localhost:3001/api/chat/join/${room.id}`,
+      room
+    );
+    console.log("joinRoom action data: ", data);
+    dispatch({
+      type: CHAT_JOIN_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: CHAT_JOIN_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

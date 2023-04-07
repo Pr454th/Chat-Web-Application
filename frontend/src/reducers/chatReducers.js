@@ -5,6 +5,9 @@ import {
   CHAT_CREATE_REQUEST,
   CHAT_CREATE_SUCCESS,
   CHAT_CREATE_FAIL,
+  CHAT_JOIN_REQUEST,
+  CHAT_JOIN_SUCCESS,
+  CHAT_JOIN_FAIL,
 } from "../constants/chatConstants";
 
 // Compare this snippet from frontend/src/actions/chatActions.js:
@@ -28,6 +31,19 @@ export const chatCreateReducer = (state = { chat: {} }, action) => {
     case CHAT_CREATE_SUCCESS:
       return { loading: false, success: true, chat: action.payload };
     case CHAT_CREATE_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const joinRoomReducer = (state = { room: {} }, action) => {
+  switch (action.type) {
+    case CHAT_JOIN_REQUEST:
+      return { loading: true };
+    case CHAT_JOIN_SUCCESS:
+      return { loading: false, success: true, room: action.payload };
+    case CHAT_JOIN_FAIL:
       return { loading: false, error: action.payload };
     default:
       return state;
