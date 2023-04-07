@@ -31,19 +31,9 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
-mongoose
-  .connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-  })
-  .then(() => {
-    server.listen(process.env.PORT, () => {
-      console.log(`Server started on port ${process.env.PORT}`);
-    });
-    console.log("Connected to MongoDB");
-  })
-  .catch((err) => {
-    console.log("Error connecting to MongoDB", err);
-  });
+server.listen(process.env.PORT, () => {
+  console.log(`Server started on port ${process.env.PORT}`);
+});
 
 module.exports = app;
 
