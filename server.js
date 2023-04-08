@@ -31,6 +31,8 @@ io.on("connection", (socket) => {
   });
 });
 
+io.set("origins", "https://chat-web-application-red.vercel.app/");
+
 Chat.watch().on("change", (change) => {
   console.log("change", change.fullDocument);
   io.emit("data", change.fullDocument);
