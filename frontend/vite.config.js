@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      "/socket.io": {
+      "/api": {
         target: "https://chat-web-application-red.vercel.app/",
         ws: true,
         secure: false,
