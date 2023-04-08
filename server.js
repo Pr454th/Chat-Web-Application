@@ -6,6 +6,7 @@ const cors = require("cors");
 const path = require("path");
 const app = express();
 const bodyParser = require("body-parser");
+const { createProxyMiddleware } = require("http-proxy-middleware");
 require("dotenv").config();
 
 app.use(bodyParser.json());
@@ -13,6 +14,7 @@ const corsOptions = {
   origin: "https://chat-web-application-red.vercel.app/",
   credentials: true,
 };
+
 app.use(cors(corsOptions));
 const server = http.createServer(app);
 const io = socketIO(server, { cors: { origin: "*" } });
