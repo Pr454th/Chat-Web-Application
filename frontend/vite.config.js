@@ -6,9 +6,8 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      "/": {
+      "/api": {
         target: "https://chat-web-application-red.vercel.app/",
-        ws: true,
         secure: false,
         changeOrigin: true,
         configure: (proxy, _options) => {
@@ -26,6 +25,10 @@ export default defineConfig({
             );
           });
         },
+      },
+      "/socket.io": {
+        target: "https://chat-web-application-red.vercel.app/",
+        ws: true,
       },
     },
   },
