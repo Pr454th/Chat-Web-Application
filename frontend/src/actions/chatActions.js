@@ -19,7 +19,7 @@ export const getChatDetail = (id) => async (dispatch) => {
     console.log("Get Chat Action");
     dispatch({ type: CHAT_DETAILS_REQUEST });
 
-    const { data } = await axios.get(`http://localhost:3001/api/chat/${id}`);
+    const { data } = await axios.get(`/api/chat/${id}`);
     console.log("Chat Details: ", data);
     dispatch({
       type: CHAT_DETAILS_SUCCESS,
@@ -41,7 +41,7 @@ export const addNote = (note) => async (dispatch) => {
     console.log("addNote action");
     dispatch({ type: NOTE_CREATE_REQUEST });
 
-    const { data } = await axios.post(`http://localhost:3000/api/note`, note);
+    const { data } = await axios.post(`/api/note`, note);
     console.log("addNote action data: ", data);
     dispatch({
       type: NOTE_CREATE_SUCCESS,
@@ -62,9 +62,7 @@ export const deleteNote = (noteId) => async (dispatch) => {
   try {
     dispatch({ type: NOTE_DELETE_REQUEST });
     console.log("deleteNote action");
-    const { data } = await axios.delete(
-      `http://localhost:3000/api/note/${noteId}`
-    );
+    const { data } = await axios.delete(`/api/note/${noteId}`);
     console.log("deleteNote action data: ", data);
     dispatch({
       type: NOTE_DELETE_SUCCESS,
