@@ -29,8 +29,7 @@ export default defineConfig({
       "/socket.io": {
         target: "https://chat-web-application-red.vercel.app/",
         ws: true,
-        secure: false,
-        changeOrigin: true,
+        secure: true,
       },
     },
   },
