@@ -2,11 +2,11 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
-import { getChatDetail, updateChat } from "../actions/chatActions";
+import { updateChat } from "../actions/chatActions";
 import io from "socket.io-client";
 import axios from "axios";
 
-const socket = io("/");
+const socket = io.connect("http://127.0.0.1:3001");
 
 const userColors = [
   "bg-red-500",
@@ -43,7 +43,7 @@ export default function Chat() {
   };
   useEffect(() => {
     socket.on("data", (newData) => {
-      // console.log("newData-->", newData);
+      console.log("newData-->", newData);
       if (newData != null) setMessages(newData[0]);
     });
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -52,6 +52,9 @@ export default function Chat() {
     axios.get(`/api/chat/${id}`).then((res) => {
       // console.log(res.data.message);
       setMessages(res.data);
+    });
+    socket.on("connect", () => {
+      console.log("Connected to server");
     });
   }, []);
 

@@ -9,10 +9,21 @@ const bodyParser = require("body-parser");
 require("dotenv").config();
 
 app.use(bodyParser.json());
-app.use(cors());
+const corsOptions = {
+  origin: "https://chat-web-application-red.vercel.app/",
+  credentials: true,
+};
+app.use(cors(corsOptions));
 const server = http.createServer(app);
 const io = socketIO(server, { cors: { origin: "*" } });
 const Chat = require("./models/ChatModel");
+
+io.on("connection", (socket) => {
+  console.log("New client connected");
+  socket.on("disconnect", () => {
+    console.log("Client disconnected");
+  });
+});
 
 Chat.watch().on("change", (change) => {
   console.log("change", change.fullDocument);
@@ -23,6 +34,7 @@ const chatRoutes = require("./routes/chatRoutes");
 
 app.use("/api/chat", chatRoutes(io));
 if (process.env.NODE_ENV === "production") {
+  console.log("production");
   app.use(express.static(path.join(__dirname, ".", "frontend", "dist")));
   app.get("*", (req, res) => {
     res.sendFile(
