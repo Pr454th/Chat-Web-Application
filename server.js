@@ -11,13 +11,18 @@ require("dotenv").config();
 
 app.use(bodyParser.json());
 const corsOptions = {
-  origin: "http://localhost:5173",
+  origin: "https://chat-web-application-red.vercel.app/",
   credentials: true,
 };
 
 app.use(cors(corsOptions));
 const server = http.createServer(app);
-const io = socketIO(server, { cors: { origin: "*" } });
+const io = socketIO(server, {
+  cors: {
+    origin: "https://chat-web-application-red.vercel.app/",
+    methods: ["GET", "POST"],
+  },
+});
 const Chat = require("./models/ChatModel");
 
 io.on("connection", (socket) => {
