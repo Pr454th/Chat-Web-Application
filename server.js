@@ -1,7 +1,7 @@
 const express = require("express");
 const http = require("http");
 const mongoose = require("mongoose");
-const socketIO = require("socket.io")({ cors: { origin: "*" } });
+const socketIO = require("socket.io");
 const cors = require("cors");
 const path = require("path");
 const app = express();
