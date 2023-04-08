@@ -3,10 +3,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { updateChat } from "../actions/chatActions";
-import io from "socket.io-client";
+import { io } from "socket.io-client";
 import axios from "axios";
 
-const socket = io.connect("https://chat-web-application-red.vercel.app/");
+const socket = io("https://chat-web-application-red.vercel.app/");
 
 const userColors = [
   "bg-red-500",
