@@ -6,7 +6,7 @@ import { updateChat } from "../actions/chatActions";
 import { io } from "socket.io-client";
 import axios from "axios";
 
-const socket = io.connect("/");
+const socket = io("/");
 
 const userColors = [
   "bg-red-500",
