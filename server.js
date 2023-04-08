@@ -17,10 +17,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 const server = http.createServer(app);
 const io = socketIO(server, {
-  cors: {
-    origin: "https://chat-web-application-red.vercel.app/",
-    methods: ["GET", "POST"],
-  },
+  cors: { origin: "*" },
 });
 const Chat = require("./models/ChatModel");
 
