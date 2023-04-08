@@ -12,7 +12,6 @@ require("dotenv").config();
 app.use(bodyParser.json());
 const corsOptions = {
   origin: "https://chat-web-application-red.vercel.app/",
-  credentials: true,
 };
 
 app.use(cors(corsOptions));
