@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "https://chat-web-application-red.vercel.app/",
+        target: "http://localhost:3001",
         secure: false,
         changeOrigin: true,
         configure: (proxy, _options) => {
@@ -27,7 +27,7 @@ export default defineConfig({
         },
       },
       "/socket.io": {
-        target: "https://chat-web-application-red.vercel.app/",
+        target: "http://localhost:3001",
         ws: true,
         secure: true,
       },
