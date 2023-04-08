@@ -6,7 +6,6 @@ const cors = require("cors");
 const path = require("path");
 const app = express();
 const bodyParser = require("body-parser");
-const { createProxyMiddleware } = require("http-proxy-middleware");
 require("dotenv").config();
 
 app.use(bodyParser.json());
