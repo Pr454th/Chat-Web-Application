@@ -23,7 +23,7 @@ const io = socketIO(server, {
     methods: ["GET", "POST"],
   },
 });
-io.origins("*:*");
+io.origins("*");
 const Chat = require("./models/ChatModel");
 
 io.on("connection", (socket) => {
