@@ -6,7 +6,7 @@ import { updateChat } from "../actions/chatActions";
 import { io } from "socket.io-client";
 import axios from "axios";
 
-const socket = io.connect("https://chat-web-application-red.vercel.app/");
+const socket = io.connect("/");
 
 const userColors = [
   "bg-red-500",
